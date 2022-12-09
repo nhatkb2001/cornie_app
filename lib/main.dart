@@ -1,4 +1,5 @@
 import 'package:cornie_app/screens/dashboard/dashboard.dart';
+import 'package:cornie_app/screens/navigation/navigation.dart';
 import 'package:flutter/material.dart';
 
 int initScreen = 0;
@@ -30,9 +31,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initScreen == 0 ? 'onboarding' : 'dashboard',
       routes: {
-        'onboarding': (context) => const AtDashboardScreen(),
+        'onboarding': (context) => const Navigation(),
         // sizeLayout()
-        'dashboard': (context) => const AtDashboardScreen(),
+        'dashboard': (context) => const Navigation(),
       },
     );
   }
