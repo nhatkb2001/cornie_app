@@ -19,6 +19,7 @@ class _HeroSectionState extends State<HeroSection> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+            height: 500,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage('https://i.imgur.com/VPiNCgs.jpg'),
