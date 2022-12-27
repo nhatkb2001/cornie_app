@@ -3,7 +3,6 @@ import 'package:cornie_app/constants/images.dart';
 import 'package:cornie_app/screens/dashboard/components/address_section/address_list.dart';
 import 'package:cornie_app/screens/dashboard/dashboard.dart';
 import 'package:cornie_app/screens/navigation/navi_item.dart';
-import 'package:cornie_app/screens/dashboard/components/theater_section/theater_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';

@@ -43,28 +43,6 @@ class _item_addressState extends State<item_address> {
                         ? const Color(0xFF3B3B3B)
                         : AppColors.white)),
           ),
-          const Spacer(),
-          Container(
-            margin: const EdgeInsets.only(right: 16, top: 16, bottom: 16),
-            child: Container(
-              height: 48,
-              width: 48,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: (widget.picked == false)
-                      ? AppColors.alt700
-                      : AppColors.white),
-              alignment: Alignment.center,
-              child: Text(widget.numberTheater,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                      color: (widget.picked == false)
-                          ? AppColors.white
-                          : AppColors.alt700)),
-            ),
-          ),
         ],
       ),
     );

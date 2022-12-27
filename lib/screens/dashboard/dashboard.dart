@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/constants/images.dart';
+import 'package:cornie_app/models/theaterModel.dart';
 import 'package:cornie_app/screens/dashboard/components/address_section/address_list.dart';
 import 'package:cornie_app/screens/navigation/navi_item.dart';
-import 'package:cornie_app/screens/dashboard/components/theater_section/theater_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,8 +19,11 @@ class AtDashboardScreen extends StatefulWidget {
 }
 
 class _AtDashboardScreenState extends State<AtDashboardScreen> {
-  List homeItems = ['Home 1', 'Home 2'];
-  String valueChoose = '';
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,15 +34,11 @@ class _AtDashboardScreenState extends State<AtDashboardScreen> {
           color: AppColors.grey100,
           child: Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 50, left: 50 + 25, bottom: 50),
+            margin: EdgeInsets.only(top: 50, left: 24, bottom: 50),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 AddressList(),
-                SizedBox(width: 24),
-                TheaterList(),
-                SizedBox(width: 24),
-                ShowTime()
               ],
             ),
           ),
