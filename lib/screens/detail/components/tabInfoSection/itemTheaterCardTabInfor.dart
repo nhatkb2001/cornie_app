@@ -6,26 +6,29 @@ import 'package:cornie_app/screens/dashboard/components/showtime_section/movie_n
 import 'package:cornie_app/screens/dashboard/components/showtime_section/schedule/dateCard.dart';
 import 'package:cornie_app/screens/dashboard/components/showtime_section/schedule/dateCardHead.dart';
 import 'package:cornie_app/screens/dashboard/components/showtime_section/schedule/dialogShowTime.dart';
-import 'package:cornie_app/screens/dashboard/components/theater_section/item_theater_end.dart';
+import 'package:cornie_app/screens/detail/components/tabInfoSection/item_theater_TabInfor.dart';
+import 'package:cornie_app/screens/detail/components/tabInfoSection/theaterDetailTabInfor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../models/theaterModel.dart';
-import '../showtime_section/schedule/dateCardEnd.dart';
-import 'item_theater.dart';
+import '../../../dashboard/components/showtime_section/film/schedule_film_card.dart';
+import '../../../dashboard/components/theater_section/item_theater.dart';
 
-class ItemTheaterCard extends StatefulWidget {
-  ItemTheaterCard({super.key, required this.theater, required this.city});
+class ItemTheaterCardTabInfor extends StatefulWidget {
+  ItemTheaterCardTabInfor(
+      {super.key, required this.theater, required this.city});
   late TheaterModel theater;
   late String city;
 
   @override
-  State<ItemTheaterCard> createState() => _ItemTheaterCardState();
+  State<ItemTheaterCardTabInfor> createState() =>
+      _ItemTheaterCardTabInforState();
 }
 
-class _ItemTheaterCardState extends State<ItemTheaterCard> {
+class _ItemTheaterCardTabInforState extends State<ItemTheaterCardTabInfor> {
   int itemChosed = 0;
 
   List<TheaterDetailModel> theaterDetailList = [];
@@ -99,7 +102,6 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                   moviesList.add(MovieModel.fromDocument(element2.data()));
                 }
               });
-              showTimeDialog(context, scheduleList, moviesList);
             });
           });
         });
@@ -107,6 +109,7 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
     });
   }
 
+  bool show = false;
   @override
   void initState() {
     super.initState();
@@ -125,7 +128,7 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
             children: [
               Container(
                 height: 52,
-                width: 312,
+                width: 776 - 24,
                 decoration: const BoxDecoration(
                     color: AppColors.alt100,
                     borderRadius: BorderRadius.only(
@@ -160,7 +163,7 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                 ),
               ),
               SizedBox(
-                width: 312,
+                width: 776 - 24,
                 child: ListView.builder(
                     itemCount: theaterDetailListFilter.length,
                     scrollDirection: Axis.vertical,
@@ -172,15 +175,17 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                                 setState(() {
                                   if (id == theaterDetailListFilter[index].id) {
                                     id = '';
+                                    show = false;
                                   } else {
                                     id = theaterDetailListFilter[index].id;
+                                    show = true;
                                     getScheduleList(
                                         theaterDetailListFilter[index].id,
                                         context);
                                   }
                                 });
                               },
-                              child: item_theater_end(
+                              child: item_theater_end_Tab_Infor(
                                   theater: theaterDetailListFilter[index].name,
                                   description:
                                       theaterDetailListFilter[index].address,
@@ -194,15 +199,17 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                                 setState(() {
                                   if (id == theaterDetailListFilter[index].id) {
                                     id = '';
+                                    show = false;
                                   } else {
                                     id = theaterDetailListFilter[index].id;
                                     getScheduleList(
                                         theaterDetailListFilter[index].id,
                                         context);
+                                    show = true;
                                   }
                                 });
                               },
-                              child: item_theater(
+                              child: item_theater_Tab_Infor(
                                   theater: theaterDetailListFilter[index].name,
                                   description:
                                       theaterDetailListFilter[index].address,
@@ -212,7 +219,7 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                                           : false),
                             );
                     }),
-              )
+              ),
             ],
           ),
         ),

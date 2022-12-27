@@ -1,16 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
+import 'package:cornie_app/models/theaterDetail.dart';
 import 'package:flutter/material.dart';
 
 class item_theater_end extends StatefulWidget {
-  const item_theater_end(
+  item_theater_end(
       {super.key,
       required this.theater,
-      required this.description,
-      required this.picked});
-
-  final String theater;
-  final String description;
-  final bool picked;
+      required this.picked,
+      required this.description});
+  String theater;
+  String description;
+  bool picked;
 
   @override
   State<item_theater_end> createState() => _item_theater_endState();
@@ -18,6 +19,13 @@ class item_theater_end extends StatefulWidget {
 
 class _item_theater_endState extends State<item_theater_end> {
   bool isHover = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,14 +54,17 @@ class _item_theater_endState extends State<item_theater_end> {
                           : AppColors.white)),
             ),
             const SizedBox(height: 8),
-            Text(widget.description,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    color: (widget.picked == false)
-                        ? const Color(0xFF3B3B3B)
-                        : AppColors.white)),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(widget.description,
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w400,
+                      color: (widget.picked == false)
+                          ? const Color(0xFF3B3B3B)
+                          : AppColors.white)),
+            ),
           ],
         ),
       ),
