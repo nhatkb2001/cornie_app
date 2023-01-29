@@ -1,3 +1,4 @@
+import 'package:cornie_app/screens/booking/seatScreen.dart';
 import 'package:cornie_app/screens/dashboard/dashboard.dart';
 import 'package:cornie_app/screens/detail/detailMovie.dart';
 import 'package:cornie_app/screens/navigation/navigation.dart';
@@ -38,11 +39,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initScreen == 0 ? 'onboarding' : 'dashboard',
       routes: {
-        'onboarding': (context) => const Navigation(),
-        // NewDetail
-
-        // sizeLayout()
-        'dashboard': (context) => const Navigation()
+        // 'onboarding': (context) => const Navigation(),
+        // 'dashboard': (context) => const Navigation()
+        'onboarding': (context) => SeatScreen(),
+        'dashboard': (context) => SeatScreen(),
       },
     );
   }

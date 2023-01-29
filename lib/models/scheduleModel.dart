@@ -5,13 +5,15 @@ class ScheduleModel {
   final String timeStart;
   final String date;
   final String price;
+  final Map<String, dynamic> map;
   ScheduleModel(
       {required this.id,
       required this.idMovie,
       required this.idTheaterDetail,
       required this.timeStart,
       required this.date,
-      required this.price});
+      required this.price,
+      required this.map});
 
   factory ScheduleModel.fromDocument(Map<String, dynamic> doc) {
     return ScheduleModel(
@@ -20,6 +22,7 @@ class ScheduleModel {
         idTheaterDetail: doc['idTheaterDetail'],
         timeStart: doc['timeStart'],
         date: doc['date'],
-        price: doc['price']);
+        price: doc['price'],
+        map: doc['matrix']);
   }
 }
