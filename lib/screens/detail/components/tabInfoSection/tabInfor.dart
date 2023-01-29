@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cornie_app/models/newModel.dart';
 import 'package:cornie_app/screens/detail/components/tabInfoSection/itemTheaterCardTabInfor.dart';
 import 'package:cornie_app/screens/new/newItemEnd.dart';
 import 'package:cornie_app/screens/rating/rateItem.dart';
@@ -37,6 +38,19 @@ class _TabInforState extends State<TabInfor> {
       if (match != null && match.groupCount >= 1) return match.group(1);
     }
     return null;
+  }
+
+  List<NewModel> listNew = [];
+
+  Future getNews() async {
+    FirebaseFirestore.instance.collection("news").snapshots().listen((value) {
+      setState(() {
+        listNew.clear();
+        for (var element in value.docs) {
+          listNew.add(NewModel.fromDocument(element.data()));
+        }
+      });
+    });
   }
 
   List<TheaterModel> theaterList = [];
@@ -107,6 +121,7 @@ class _TabInforState extends State<TabInfor> {
   void initState() {
     super.initState();
     initializePlayer();
+    getNews();
   }
 
   @override
@@ -335,13 +350,13 @@ class _TabInforState extends State<TabInfor> {
                   SizedBox(
                       width: 800,
                       child: ListView.builder(
-                          itemCount: 3,
+                          itemCount: listNew.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
                             return (index != (3 - 1))
-                                ? NewItem()
-                                : NewItemEnd();
+                                ? NewItem(id: listNew[index].id)
+                                : NewItemEnd(id: listNew[index].id);
                           })),
                 ],
               ),

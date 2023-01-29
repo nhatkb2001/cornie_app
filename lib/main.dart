@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       initialRoute: initScreen == 0 ? 'onboarding' : 'dashboard',
       routes: {
         'onboarding': (context) => const Navigation(),
+        // NewDetail
 
         // sizeLayout()
         'dashboard': (context) => const Navigation()
