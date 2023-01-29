@@ -76,6 +76,7 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
   String id = '';
   List<MovieModel> moviesList = [];
   List<ScheduleModel> scheduleList = [];
+  List<ScheduleModel> scheduleListChoice = [];
   Future getScheduleList(String idTheaterDetail, context) async {
     FirebaseFirestore.instance
         .collection("schedules")
@@ -94,12 +95,20 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
               .listen((value2) {
             setState(() {
               moviesList.clear();
+              scheduleListChoice.clear();
               value2.docs.forEach((element2) {
                 if (element2.id == value3.idMovie) {
                   moviesList.add(MovieModel.fromDocument(element2.data()));
                 }
               });
-              showTimeDialog(context, scheduleList, moviesList);
+              moviesList.forEach(
+                (element) {
+                  if (element.id == value3.idMovie) {
+                    scheduleListChoice.add(value3);
+                  }
+                },
+              );
+              showTimeDialog(context, scheduleListChoice, moviesList);
             });
           });
         });

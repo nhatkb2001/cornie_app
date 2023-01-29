@@ -13,8 +13,6 @@ class RatingItem extends StatefulWidget {
 }
 
 class _RatingItemState extends State<RatingItem> {
-  String valueChoose = '';
-
   @override
   Widget build(BuildContext context) {
     return Container(

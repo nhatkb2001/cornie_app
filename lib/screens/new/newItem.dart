@@ -1,19 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/constants/styles.dart';
+import 'package:cornie_app/models/newModel.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 class NewItem extends StatefulWidget {
-  NewItem({
-    super.key,
-  });
+  NewItem({super.key, required this.id});
+  String id;
 
   @override
   State<NewItem> createState() => _NewItemState();
 }
 
 class _NewItemState extends State<NewItem> {
-  String valueChoose = '';
+  NewModel news = NewModel(
+      id: '',
+      idOwner: '',
+      timeCreate: '',
+      contents: [],
+      liked: [],
+      title: '',
+      posterNew: '');
+
+  Future getNews() async {
+    FirebaseFirestore.instance
+        .collection("news")
+        .where('id', isEqualTo: widget.id)
+        .snapshots()
+        .listen((value) {
+      setState(() {
+        news = NewModel.fromDocument(value.docs.first.data());
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getNews();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +59,14 @@ class _NewItemState extends State<NewItem> {
                     color: Colors.black,
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Image.network(news.posterNew,
+                          width: 200, height: 150, fit: BoxFit.cover),
+                    ),
+                  ),
                 ),
                 SizedBox(width: 24),
                 Container(
@@ -41,31 +75,33 @@ class _NewItemState extends State<NewItem> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Avatar 2: Dòng Chảy Của Nước vs Avatar 1 - Bạn thuộc phe nào?',
-                        style: TextStyle(
+                      Text(
+                        news.title,
+                        style: const TextStyle(
                           fontSize: 18,
-                          fontFamily: 'Propins',
-                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
                           color: AppColors.black,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      const Text(
-                        '2 giờ trước',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'Propins',
+                      SizedBox(height: 4),
+                      Text(
+                        news.timeCreate,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
                           fontWeight: FontWeight.w400,
-                          color: AppColors.grey700,
+                          color: AppColors.grey500,
                         ),
                       ),
-                      SizedBox(height: 16),
-                      const Text(
-                        'Chưa gì dân tình đã chia bè phái để dành nhau xem phần nào của Avatar mới là phần hay nhất.',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'Propins',
+                      SizedBox(height: 8),
+                      Text(
+                        news.contents[0],
+                        maxLines: 4,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          height: 1.5,
+                          fontFamily: 'Poppins',
                           fontWeight: FontWeight.w300,
                           color: AppColors.grey700,
                         ),

@@ -38,7 +38,7 @@ List dateList = [
   DateFormat('dd/MM').format(DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day + 6)),
 ];
-showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleList,
+showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleListChoice,
     List<MovieModel> moviesList) {
   return showDialog(
       context: mContext,
@@ -250,18 +250,37 @@ showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleList,
                                                 SizedBox(
                                                   height: 88,
                                                   child: ListView.builder(
-                                                      itemCount: 4,
+                                                      itemCount:
+                                                          scheduleListChoice
+                                                              .length,
                                                       scrollDirection:
                                                           Axis.horizontal,
                                                       shrinkWrap: true,
                                                       itemBuilder:
                                                           (BuildContext context,
                                                               int index) {
-                                                        return const ScheduleFilmCard(
-                                                          hour: '18.00',
+                                                        return ScheduleFilmCard(
+                                                          hour:
+                                                              (scheduleListChoice[
+                                                                          index]
+                                                                      .timeStart)
+                                                                  .toString(),
                                                           picked: false,
-                                                          price: '45' + 'K',
-                                                          state: 'Play',
+                                                          price:
+                                                              scheduleListChoice[
+                                                                          index]
+                                                                      .price +
+                                                                  'K',
+                                                          state: (scheduleListChoice[
+                                                                          index]
+                                                                      .timeStart ==
+                                                                  DateFormat(
+                                                                          'HH:mm')
+                                                                      .format(DateTime
+                                                                          .now())
+                                                                      .toString())
+                                                              ? 'Play'
+                                                              : 'Played',
                                                         );
                                                       }),
                                                 ),

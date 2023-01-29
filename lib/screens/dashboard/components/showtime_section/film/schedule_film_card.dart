@@ -21,14 +21,25 @@ class ScheduleFilmCard extends StatefulWidget {
 
 class _ScheduleFilmCardState extends State<ScheduleFilmCard> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 88,
       width: 72,
       margin: const EdgeInsets.only(left: 8),
       decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border.all(color: AppColors.grey900),
+          color:
+              (widget.state == 'Played') ? AppColors.grey200 : AppColors.white,
+          border: Border.all(
+              color: (widget.state == 'Played')
+                  ? AppColors.grey100
+                  : ((widget.state == 'Play')
+                      ? AppColors.green
+                      : AppColors.grey900)),
           borderRadius: BorderRadius.all(Radius.circular(8))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,23 +49,62 @@ class _ScheduleFilmCardState extends State<ScheduleFilmCard> {
               style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w400,
-                  color: (widget.picked == false)
-                      ? const Color(0xFF3B3B3B)
-                      : AppColors.white)),
+                  fontWeight: FontWeight.w600,
+                  color: (widget.state == 'Played')
+                      ? AppColors.grey500
+                      : ((widget.picked == false)
+                          ? const Color(0xFF3B3B3B)
+                          : AppColors.white))),
           const SizedBox(height: 8),
           Text(widget.price,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 12,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w400,
-                  color: AppColors.grey900)),
+                  color: (widget.state == 'Played')
+                      ? AppColors.grey500
+                      : (AppColors.grey900))),
           const SizedBox(height: 8),
-          const Icon(
-            Iconsax.play,
-            size: 24,
-            color: AppColors.orange,
-          )
+          (widget.state == 'Playing')
+              ? Container(
+                  height: 32,
+                  width: 32,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: AppColors.success,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(8))),
+                  child: const Center(
+                    child: Icon(
+                      Iconsax.play_circle,
+                      size: 24,
+                      color: AppColors.success,
+                    ),
+                  ),
+                )
+              : (widget.state == 'Play')
+                  ? Icon(
+                      Iconsax.play_circle,
+                      size: 24,
+                      color: AppColors.green,
+                    )
+                  : Container(
+                      height: 24,
+                      width: 24,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.grey500,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                      child: const Center(
+                        child: Icon(
+                          Iconsax.stop,
+                          size: 16,
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                    ),
         ],
       ),
     );

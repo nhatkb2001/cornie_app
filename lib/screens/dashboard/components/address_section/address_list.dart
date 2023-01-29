@@ -9,12 +9,14 @@ import 'package:cornie_app/screens/dashboard/components/theater_section/item_the
 import 'package:cornie_app/screens/dashboard/components/theater_section/item_theater_card.dart';
 import 'package:cornie_app/screens/dashboard/components/theater_section/item_theater_end.dart';
 import 'package:cornie_app/screens/navigation/navi_item.dart';
+import 'package:cornie_app/screens/new/newDetail.dart';
 import 'package:cornie_app/screens/new/newItem.dart';
 import 'package:cornie_app/screens/new/newItemEnd.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../models/newModel.dart';
 import '../showtime_section/showtime.dart';
 
 class AddressList extends StatefulWidget {
@@ -79,11 +81,24 @@ class _AddressListState extends State<AddressList> {
   }
 
   String id = '';
+  List<NewModel> listNew = [];
+
+  Future getNews() async {
+    FirebaseFirestore.instance.collection("news").snapshots().listen((value) {
+      setState(() {
+        listNew.clear();
+        for (var element in value.docs) {
+          listNew.add(NewModel.fromDocument(element.data()));
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     getTheaterList();
+    getNews();
   }
 
   @override
@@ -281,59 +296,136 @@ class _AddressListState extends State<AddressList> {
                           ],
                         ),
                         const SizedBox(height: 24),
-                        SizedBox(
-                            width: 312,
-                            child: ListView.builder(
-                                itemCount: theaterListFilter.length,
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return (theaterListFilter.isNotEmpty)
-                                      ? ItemTheaterCard(
+                        (theaterListFilter.length != 0)
+                            ? SizedBox(
+                                width: 312,
+                                child: ListView.builder(
+                                    itemCount: theaterListFilter.length,
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ItemTheaterCard(
                                           theater: theaterListFilter[index],
-                                          city: city)
-                                      : Container();
-                                })),
+                                          city: city);
+                                    }))
+                            : Container(
+                                height: 52,
+                                width: 312,
+                                decoration: BoxDecoration(
+                                  color: AppColors.orange,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Hiện chưa có rạp tại thành phố',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.black),
+                                  ),
+                                ),
+                              ),
                       ],
                     ),
                   ],
                 ),
           const SizedBox(width: 24),
-          Column(
-            children: [
-              const SizedBox(height: 50),
-              Container(
-                height: 52,
-                width: 800,
-                decoration: const BoxDecoration(
-                    color: AppColors.alt100,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8))),
-                child: Container(
-                  margin: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                  child: const Text(
-                    'Hot News',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.grey900),
-                  ),
-                ),
-              ),
-              SizedBox(
-                  width: 800,
-                  child: ListView.builder(
-                      itemCount: 3,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return (index != (3 - 1)) ? NewItem() : NewItemEnd();
-                      })),
-            ],
-          ),
+          (listNew.length != 0)
+              ? Column(
+                  children: [
+                    const SizedBox(height: 50),
+                    Container(
+                      height: 52,
+                      width: 800,
+                      decoration: const BoxDecoration(
+                          color: AppColors.alt100,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8))),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                                left: 16, top: 16, bottom: 16),
+                            child: const Text(
+                              'Hot News',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.grey900),
+                            ),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              //Create news
+                            },
+                            child: Container(
+                                margin: const EdgeInsets.only(right: 24),
+                                child: const Icon(
+                                  Iconsax.add_square,
+                                  size: 28,
+                                  color: AppColors.grey900,
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    (listNew.isNotEmpty)
+                        ? SizedBox(
+                            width: 800,
+                            child: ListView.builder(
+                                itemCount: listNew.length,
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ((index != (listNew.length - 1))
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        NewDetail(
+                                                          id: listNew[index].id,
+                                                        )));
+                                          },
+                                          child: NewItem(
+                                            id: listNew[index].id,
+                                          ))
+                                      : GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        NewDetail(
+                                                            id: listNew[index]
+                                                                .id)));
+                                          },
+                                          child: NewItemEnd(
+                                            id: listNew[index].id,
+                                          )));
+                                }))
+                        : CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.white,
+                          )
+                  ],
+                )
+              : CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.white,
+                )
         ],
       ),
     );
