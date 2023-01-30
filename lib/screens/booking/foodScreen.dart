@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
+import 'package:cornie_app/models/comboModel.dart';
 import 'package:cornie_app/screens/booking/components/buildChair.dart';
 import 'package:cornie_app/screens/detail/components/heroSection/heroSection.dart';
 import 'package:cornie_app/screens/detail/tabSection.dart';
@@ -20,8 +21,19 @@ class FoodScreen extends StatefulWidget {
 
 class _FoodScreenState extends State<FoodScreen> {
   int price = 0;
+  List<ComboModel> combo = [];
+  ComboModel combo1 =
+      ComboModel(name: 'Bắp Ngọt 60oz', price: '40', quantity: '1');
+  ComboModel combo2 =
+      ComboModel(name: 'Nấm Caramel 60oz', price: '40', quantity: '1');
+  ComboModel combo3 =
+      ComboModel(name: 'Bắp Phô Mai 60oz', price: '40', quantity: '1');
   @override
   void initState() {
+    combo.clear();
+    combo.add(combo1);
+    combo.add(combo2);
+    combo.add(combo3);
     super.initState();
   }
 
@@ -151,6 +163,181 @@ class _FoodScreenState extends State<FoodScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Column(
+                        children: [
+                          Container(
+                            width: 800,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(6),
+                                    topRight: Radius.circular(6)),
+                                color: AppColors.grey100,
+                                border: Border.all(color: AppColors.grey200)),
+                            padding: EdgeInsets.only(
+                                top: 14, bottom: 14, left: 14, right: 14),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "COMBO",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.grey500,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "GIÁ TIỀN",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.grey500,
+                                          ),
+                                        ),
+                                        SizedBox(width: 24),
+                                        Text(
+                                          "SỐ LƯỢNG",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.grey500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: 800,
+                            decoration: BoxDecoration(
+                              color: AppColors.grey200,
+                            ),
+                            padding: EdgeInsets.only(
+                                top: 14, bottom: 14, left: 14, right: 14),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    "BẮP RANG",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.grey700.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: 800,
+                            decoration: const BoxDecoration(
+                              color: AppColors.white,
+                            ),
+                            child: ListView.builder(
+                                itemCount: combo.length,
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    width: 800,
+                                    height: 72,
+                                    padding: const EdgeInsets.only(
+                                        left: 14, right: 14),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: AppColors.grey100),
+                                      color: AppColors.white,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          combo[index].name,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.grey700,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              combo[index].price + " K",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.grey500,
+                                              ),
+                                            ),
+                                            SizedBox(width: 48),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 24,
+                                                  width: 24,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .grey200)),
+                                                  child: Icon(Iconsax.minus,
+                                                      size: 16,
+                                                      color: AppColors.grey500),
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  combo[index].quantity,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily: 'Poppins',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.grey500,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 8),
+                                                Container(
+                                                  height: 24,
+                                                  width: 24,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .grey200)),
+                                                  child: Icon(Iconsax.add,
+                                                      size: 16,
+                                                      color: AppColors.grey500),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }),
+                          )
+                        ],
+                      ),
+                      SizedBox(width: 100),
                       Column(
                         children: [
                           Container(
