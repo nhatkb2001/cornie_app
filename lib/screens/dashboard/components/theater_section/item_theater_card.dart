@@ -17,9 +17,14 @@ import '../showtime_section/schedule/dateCardEnd.dart';
 import 'item_theater.dart';
 
 class ItemTheaterCard extends StatefulWidget {
-  ItemTheaterCard({super.key, required this.theater, required this.city});
+  ItemTheaterCard(
+      {super.key,
+      required this.theater,
+      required this.city,
+      required this.userId});
   late TheaterModel theater;
   late String city;
+  String userId;
 
   @override
   State<ItemTheaterCard> createState() => _ItemTheaterCardState();
@@ -108,7 +113,8 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                   }
                 },
               );
-              showTimeDialog(context, scheduleListChoice, moviesList);
+              showTimeDialog(
+                  context, scheduleListChoice, moviesList, widget.userId);
             });
           });
         });
@@ -120,6 +126,7 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
   void initState() {
     super.initState();
     getTheaterDetailList();
+    id = '';
   }
 
   @override

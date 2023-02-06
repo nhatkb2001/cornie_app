@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
+import 'package:cornie_app/models/seatModel.dart';
 import 'package:cornie_app/screens/booking/components/buildChair.dart';
 import 'package:cornie_app/screens/booking/foodScreen.dart';
 import 'package:cornie_app/screens/detail/components/heroSection/heroSection.dart';
@@ -13,7 +14,9 @@ import 'package:iconsax/iconsax.dart';
 import '../../models/scheduleModel.dart';
 
 class SeatScreen extends StatefulWidget {
-  SeatScreen({super.key});
+  SeatScreen({super.key, required this.id, required this.userId});
+  String id;
+  String userId;
 
   @override
   State<SeatScreen> createState() => _SeatScreenState();
@@ -34,6 +37,7 @@ class _SeatScreenState extends State<SeatScreen> {
   ];
   List<String> chairName = ['A', 'B', 'C', 'D', 'E', 'F'];
   int price = 0;
+  List<SeatModel> seatList = [];
 
   ScheduleModel schedule = ScheduleModel(
       id: '',
@@ -46,7 +50,7 @@ class _SeatScreenState extends State<SeatScreen> {
   Future getSchedule() async {
     FirebaseFirestore.instance
         .collection("schedules")
-        .where('id', isEqualTo: 'bmvy7s1W4lvz6vQg6z3E')
+        .where('id', isEqualTo: widget.id)
         .snapshots()
         .listen((value) {
       setState(() {
@@ -57,17 +61,23 @@ class _SeatScreenState extends State<SeatScreen> {
   }
 
   Future updateMatrix() async {
-    FirebaseFirestore.instance
-        .collection("schedules")
-        .doc('bmvy7s1W4lvz6vQg6z3E')
-        .update({
+    FirebaseFirestore.instance.collection("schedules").doc(widget.id).update({
       "matrix": MatrixHelper.mapFromIntMatrix(_chairStatus),
+    });
+  }
+
+  Future minus(SeatModel seat, List<SeatModel> list) async {
+    setState(() {
+      list.removeWhere((element) => element.name == seat.name);
+      print(list.length);
     });
   }
 
   @override
   void initState() {
+    // updateMatrix();
     getSchedule();
+    seatList.clear();
     super.initState();
   }
 
@@ -315,44 +325,107 @@ class _SeatScreenState extends State<SeatScreen> {
                                     for (int x = 0; x < 9; x++)
                                       Expanded(
                                         flex: x == 0 || x == 8 ? 2 : 1,
-                                        child: x == 0 ||
-                                                x == 8 ||
-                                                (i == 0 && x == 1) ||
-                                                (i == 0 && x == 7) ||
-                                                (x == 4)
-                                            ? Container()
-                                            : Container(
-                                                height: 32,
-                                                margin: EdgeInsets.all(8),
-                                                child: _chairStatus[i][x - 1] ==
-                                                        1
-                                                    ? GestureDetector(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            _chairStatus[i]
-                                                                [x - 1] = 2;
-                                                            price += 45;
-                                                          });
-                                                        },
-                                                        child: BuildChairs
-                                                            .availableChair(),
-                                                      )
-                                                    : _chairStatus[i][x - 1] ==
-                                                            2
+                                        child:
+                                            x == 0 ||
+                                                    x == 8 ||
+                                                    (i == 0 && x == 1) ||
+                                                    (i == 0 && x == 7) ||
+                                                    (x == 4)
+                                                ? Container()
+                                                : Container(
+                                                    height: 32,
+                                                    margin: EdgeInsets.all(8),
+                                                    child: _chairStatus[i]
+                                                                [x - 1] ==
+                                                            1
                                                         ? GestureDetector(
                                                             onTap: () {
                                                               setState(() {
                                                                 _chairStatus[i]
-                                                                    [x - 1] = 1;
-                                                                price -= 45;
+                                                                    [x - 1] = 2;
+                                                                price += 45;
+                                                                print(x);
+                                                                print(i);
+                                                                print((i == 0)
+                                                                    ? "$x" + "A"
+                                                                    : (i == 1)
+                                                                        ? "$x" +
+                                                                            "B"
+                                                                        : (i ==
+                                                                                2)
+                                                                            ? "$x" +
+                                                                                "C"
+                                                                            : (i == 3)
+                                                                                ? "$x" + "D"
+                                                                                : (i == 4)
+                                                                                    ? "$x" + "E"
+                                                                                    : "$x" + "F");
+                                                                seatList.add(SeatModel(
+                                                                    x,
+                                                                    i,
+                                                                    (i == 0)
+                                                                        ? "$x" + "A"
+                                                                        : (i == 1)
+                                                                            ? "$x" + "B"
+                                                                            : (i == 2)
+                                                                                ? "$x" + "C"
+                                                                                : (i == 3)
+                                                                                    ? "$x" + "D"
+                                                                                    : (i == 4)
+                                                                                        ? "$x" + "E"
+                                                                                        : "$x" + "F"));
                                                               });
                                                             },
-                                                            child: BuildChairs
-                                                                .selectedChair(),
+                                                            child: BuildChairs.availableChair((i ==
+                                                                    0)
+                                                                ? "$x" + "A"
+                                                                : (i == 1)
+                                                                    ? "$x" + "B"
+                                                                    : (i == 2)
+                                                                        ? "$x" +
+                                                                            "C"
+                                                                        : (i ==
+                                                                                3)
+                                                                            ? "$x" +
+                                                                                "D"
+                                                                            : (i == 4)
+                                                                                ? "$x" + "E"
+                                                                                : "$x" + "F"),
                                                           )
-                                                        : BuildChairs
-                                                            .reservedChair(),
-                                              ),
+                                                        : _chairStatus[i]
+                                                                    [x - 1] ==
+                                                                2
+                                                            ? GestureDetector(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    _chairStatus[
+                                                                            i][
+                                                                        x - 1] = 1;
+                                                                    price -= 45;
+                                                                    minus(
+                                                                        SeatModel(
+                                                                            x,
+                                                                            i,
+                                                                            (i == 0)
+                                                                                ? "$x" + "A"
+                                                                                : (i == 1)
+                                                                                    ? "$x" + "B"
+                                                                                    : (i == 2)
+                                                                                        ? "$x" + "C"
+                                                                                        : (i == 3)
+                                                                                            ? "$x" + "D"
+                                                                                            : (i == 4)
+                                                                                                ? "$x" + "E"
+                                                                                                : "$x" + "F"),
+                                                                        seatList);
+                                                                  });
+                                                                },
+                                                                child: BuildChairs
+                                                                    .selectedChair(),
+                                                              )
+                                                            : BuildChairs
+                                                                .reservedChair(),
+                                                  ),
                                       ),
                                   ],
                                 ),
@@ -444,7 +517,11 @@ class _SeatScreenState extends State<SeatScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => FoodScreen()));
+                                      builder: (context) => FoodScreen(
+                                            pricetotal: price,
+                                            chairStatus: _chairStatus,
+                                            seatList: seatList,
+                                          )));
                             },
                             child: Container(
                               width: 300 + 56,
