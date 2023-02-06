@@ -20,9 +20,8 @@ import '../../../../models/newModel.dart';
 import '../showtime_section/showtime.dart';
 
 class AddressList extends StatefulWidget {
-  AddressList({
-    super.key,
-  });
+  AddressList({super.key, required this.userId});
+  String userId;
 
   @override
   State<AddressList> createState() => _AddressListState();
@@ -306,8 +305,10 @@ class _AddressListState extends State<AddressList> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return ItemTheaterCard(
-                                          theater: theaterListFilter[index],
-                                          city: city);
+                                        theater: theaterListFilter[index],
+                                        city: city,
+                                        userId: widget.userId,
+                                      );
                                     }))
                             : Container(
                                 height: 52,
@@ -380,46 +381,38 @@ class _AddressListState extends State<AddressList> {
                         ],
                       ),
                     ),
-                    (listNew.isNotEmpty)
-                        ? SizedBox(
-                            width: 800,
-                            child: ListView.builder(
-                                itemCount: listNew.length,
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ((index != (listNew.length - 1))
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        NewDetail(
-                                                          id: listNew[index].id,
-                                                        )));
-                                          },
-                                          child: NewItem(
-                                            id: listNew[index].id,
-                                          ))
-                                      : GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        NewDetail(
-                                                            id: listNew[index]
-                                                                .id)));
-                                          },
-                                          child: NewItemEnd(
-                                            id: listNew[index].id,
-                                          )));
-                                }))
-                        : CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.white,
-                          )
+                    SizedBox(
+                        width: 800,
+                        child: ListView.builder(
+                            itemCount: listNew.length,
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ((index != (listNew.length - 1))
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => NewDetail(
+                                                      id: listNew[index].id,
+                                                    )));
+                                      },
+                                      child: NewItem(
+                                        id: listNew[index].id,
+                                      ))
+                                  : GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => NewDetail(
+                                                    id: listNew[index].id)));
+                                      },
+                                      child: NewItemEnd(
+                                        id: listNew[index].id,
+                                      )));
+                            }))
                   ],
                 )
               : CircularProgressIndicator(

@@ -39,10 +39,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initScreen == 0 ? 'onboarding' : 'dashboard',
       routes: {
-        // 'onboarding': (context) => const Navigation(),
-        // 'dashboard': (context) => const Navigation()
-        'onboarding': (context) => SeatScreen(),
-        'dashboard': (context) => SeatScreen(),
+        'onboarding': (context) => const Navigation(),
+        'dashboard': (context) => const Navigation()
       },
     );
   }

@@ -16,6 +16,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../models/movieModel.dart';
+import '../../../../booking/seatScreen.dart';
 
 late DateTime date = DateTime.now();
 int itemChosed = 0;
@@ -39,7 +40,7 @@ List dateList = [
       DateTime.now().year, DateTime.now().month, DateTime.now().day + 6)),
 ];
 showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleListChoice,
-    List<MovieModel> moviesList) {
+    List<MovieModel> moviesList, String userId) {
   return showDialog(
       context: mContext,
       builder: (context) {
@@ -259,28 +260,41 @@ showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleListChoice,
                                                       itemBuilder:
                                                           (BuildContext context,
                                                               int index) {
-                                                        return ScheduleFilmCard(
-                                                          hour:
-                                                              (scheduleListChoice[
-                                                                          index]
-                                                                      .timeStart)
-                                                                  .toString(),
-                                                          picked: false,
-                                                          price:
-                                                              scheduleListChoice[
-                                                                          index]
-                                                                      .price +
-                                                                  'K',
-                                                          state: (scheduleListChoice[
-                                                                          index]
-                                                                      .timeStart ==
-                                                                  DateFormat(
-                                                                          'HH:mm')
-                                                                      .format(DateTime
-                                                                          .now())
-                                                                      .toString())
-                                                              ? 'Play'
-                                                              : 'Played',
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            SeatScreen(
+                                                                              id: scheduleListChoice[index].id,
+                                                                              userId: '',
+                                                                            )));
+                                                          },
+                                                          child:
+                                                              ScheduleFilmCard(
+                                                            hour: (scheduleListChoice[
+                                                                        index]
+                                                                    .timeStart)
+                                                                .toString(),
+                                                            picked: false,
+                                                            price:
+                                                                scheduleListChoice[
+                                                                            index]
+                                                                        .price +
+                                                                    'K',
+                                                            state: (scheduleListChoice[
+                                                                            index]
+                                                                        .timeStart ==
+                                                                    DateFormat(
+                                                                            'HH:mm')
+                                                                        .format(
+                                                                            DateTime.now())
+                                                                        .toString())
+                                                                ? 'Play'
+                                                                : 'Played',
+                                                          ),
                                                         );
                                                       }),
                                                 ),

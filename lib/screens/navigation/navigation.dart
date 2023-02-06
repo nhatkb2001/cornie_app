@@ -153,7 +153,11 @@ class _NavigationState extends State<Navigation> {
         ),
         body: PageView(
           controller: controller,
-          children: [AtDashboardScreen()],
+          children: [
+            AtDashboardScreen(
+              userId: '',
+            )
+          ],
         ));
   }
 }

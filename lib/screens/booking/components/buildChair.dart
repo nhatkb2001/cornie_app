@@ -12,12 +12,22 @@ class BuildChairs {
     );
   }
 
-  static Widget availableChair() {
+  static Widget availableChair(String number) {
     return Container(
       height: 20.0,
       width: 20.0,
       decoration: BoxDecoration(
           color: AppColors.grey500, borderRadius: BorderRadius.circular(6.0)),
+      child: Center(
+        child: Text(
+          number,
+          style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              color: AppColors.white,
+              fontWeight: FontWeight.w400),
+        ),
+      ),
     );
   }
 

@@ -12,7 +12,8 @@ import '../navigation/navi_item_none_arrow.dart';
 import 'components/showtime_section/showtime.dart';
 
 class AtDashboardScreen extends StatefulWidget {
-  const AtDashboardScreen({super.key});
+  AtDashboardScreen({super.key, required this.userId});
+  String userId;
 
   @override
   State<AtDashboardScreen> createState() => _AtDashboardScreenState();
@@ -38,7 +39,9 @@ class _AtDashboardScreenState extends State<AtDashboardScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AddressList(),
+                AddressList(
+                  userId: widget.userId,
+                ),
               ],
             ),
           ),
