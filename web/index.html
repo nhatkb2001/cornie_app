@@ -31,7 +31,7 @@
 
   <title>cornie_app</title>
   <link rel="manifest" href="manifest.json">
-
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-storage.js"></script>
   <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
@@ -40,6 +40,7 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
@@ -53,6 +54,21 @@
         return appRunner.runApp();
       });
     });
+    
+  </script>
+   <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyCVIAr1EU9bHrk6zOBGMEA7PE_Qrf6RaeI",
+  authDomain: "cornieproject.firebaseapp.com",
+  databaseURL: "https://cornieproject-default-rtdb.firebaseio.com",
+  projectId: "cornieproject",
+  storageBucket: "cornieproject.appspot.com",
+  messagingSenderId: "602307828276",
+  appId: "1:602307828276:web:2057b60c9286df83b60861",
+  measurementId: "G-WS3G48K1YP"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
   </script>
 </body>
 </html>

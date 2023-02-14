@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/models/theaterDetail.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../models/scheduleModel.dart';
 import '../../../dashboard/components/showtime_section/film/schedule_film_card.dart';
 
 class item_theater_Tab_Infor extends StatefulWidget {
@@ -10,10 +12,12 @@ class item_theater_Tab_Infor extends StatefulWidget {
       {super.key,
       required this.theater,
       required this.picked,
-      required this.description});
+      required this.description,
+      required this.scheduleList});
   String theater;
   String description;
   bool picked;
+  List<ScheduleModel> scheduleList;
 
   @override
   State<item_theater_Tab_Infor> createState() => _item_theater_Tab_InforState();
@@ -82,15 +86,20 @@ class _item_theater_Tab_InforState extends State<item_theater_Tab_Infor> {
                 child: SizedBox(
                   height: 88,
                   child: ListView.builder(
-                      itemCount: 4,
+                      itemCount: widget.scheduleList.length,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) {
-                        return const ScheduleFilmCard(
-                          hour: '18.00',
+                        return ScheduleFilmCard(
+                          hour: widget.scheduleList[index].timeStart,
                           picked: false,
-                          price: '45' + 'K',
-                          state: 'Play',
+                          price: widget.scheduleList[index].price + 'K',
+                          state: (widget.scheduleList[index].timeStart ==
+                                  DateFormat('HH:mm')
+                                      .format(DateTime.now())
+                                      .toString())
+                              ? 'Play'
+                              : 'Played',
                         );
                       }),
                 ),

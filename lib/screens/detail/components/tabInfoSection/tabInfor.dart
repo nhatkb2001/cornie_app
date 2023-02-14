@@ -1,22 +1,27 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cornie_app/models/movieModel.dart';
 import 'package:cornie_app/models/newModel.dart';
 import 'package:cornie_app/screens/detail/components/tabInfoSection/itemTheaterCardTabInfor.dart';
 import 'package:cornie_app/screens/new/newItemEnd.dart';
 import 'package:cornie_app/screens/rating/rateItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../models/scheduleModel.dart';
 import '../../../../models/theaterModel.dart';
 import '../../../dashboard/components/theater_section/item_theater_card.dart';
 import '../../../new/newItem.dart';
 
 class TabInfor extends StatefulWidget {
-  const TabInfor({super.key});
+  TabInfor({super.key, required this.id, required this.userId});
+  String id;
+  String userId;
 
   @override
   State<TabInfor> createState() => _TabInforState();
@@ -53,11 +58,31 @@ class _TabInforState extends State<TabInfor> {
     });
   }
 
+  List<ScheduleModel> scheduleList = [];
+  Future getScheduleList() async {
+    FirebaseFirestore.instance
+        .collection("schedules")
+        .where('idMovie', isEqualTo: widget.id)
+        .snapshots()
+        .listen((value) {
+      setState(() {
+        scheduleList.clear();
+        value.docs.forEach((element) {
+          scheduleList.add(ScheduleModel.fromDocument(element.data()));
+        });
+        scheduleList.forEach((element) {
+          getTheaterList(element.idTheater);
+        });
+      });
+    });
+  }
+
   List<TheaterModel> theaterList = [];
   List<TheaterModel> theaterListFilter = [];
-  Future getTheaterList() async {
+  Future getTheaterList(String idTheater) async {
     FirebaseFirestore.instance
         .collection("theaters")
+        .where('id', isEqualTo: idTheater)
         .snapshots()
         .listen((value) {
       setState(() {
@@ -78,18 +103,6 @@ class _TabInforState extends State<TabInfor> {
   }
 
   late YoutubePlayerController _controller;
-  Future initializePlayer() async {
-    _controller = YoutubePlayerController.fromVideoId(
-      params: const YoutubePlayerParams(
-        showControls: true,
-        mute: false,
-        showFullscreenButton: true,
-        loop: false,
-      ),
-      videoId: convertUrlToId("https://www.youtube.com/watch?v=-hJWNccNm78")
-          .toString(),
-    );
-  }
 
   bool show = false;
 
@@ -110,6 +123,47 @@ class _TabInforState extends State<TabInfor> {
     'Khánh Hòa',
     'Kon Tum'
   ];
+  MovieModel movie = MovieModel(
+      id: '',
+      ageLimit: '',
+      name: '',
+      description: '',
+      duration: '',
+      poster: '',
+      image: '',
+      startTime: '',
+      type: '',
+      typeSub: '',
+      actorList: [],
+      director: [],
+      publisher: []);
+
+  Future getMovie() async {
+    FirebaseFirestore.instance
+        .collection("movies")
+        .where('id', isEqualTo: widget.id)
+        .snapshots()
+        .listen((value) {
+      setState(() {
+        movie = MovieModel.fromDocument(value.docs.first.data());
+        _controller = YoutubePlayerController.fromVideoId(
+          params: const YoutubePlayerParams(
+            showControls: true,
+            mute: false,
+            showFullscreenButton: true,
+            loop: false,
+          ),
+          videoId: convertUrlToId(movie.image).toString(),
+        );
+      });
+    });
+  }
+
+  bool loading = false;
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded',
+  );
 
   @override
   void dispose() {
@@ -120,7 +174,7 @@ class _TabInforState extends State<TabInfor> {
   @override
   void initState() {
     super.initState();
-    initializePlayer();
+    getMovie();
     getNews();
   }
 
@@ -149,17 +203,30 @@ class _TabInforState extends State<TabInfor> {
               const SizedBox(
                 height: 16,
               ),
-              Container(
-                height: 450,
-                width: 800,
-                child: YoutubePlayerControllerProvider(
-                  controller: _controller,
-                  child: YoutubePlayer(
-                    aspectRatio: 16 / 9,
-                    controller: _controller,
-                  ),
-                ),
-              ),
+              FutureBuilder<String>(
+                  future:
+                      _calculation, // a previously-obtained Future<String> or null
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        height: 450,
+                        width: 800,
+                        child: YoutubePlayerControllerProvider(
+                          controller: _controller,
+                          child: YoutubePlayer(
+                            aspectRatio: 16 / 9,
+                            controller: _controller,
+                          ),
+                        ),
+                      );
+                    }
+                    return SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(),
+                    );
+                  }),
               SizedBox(
                 height: 24,
               ),
@@ -260,7 +327,7 @@ class _TabInforState extends State<TabInfor> {
                               //action navigate to dashboard screen
                               onPressed: () async {
                                 setState(() {
-                                  getTheaterList();
+                                  getScheduleList();
                                   show = !show;
                                 });
                               },
@@ -355,8 +422,8 @@ class _TabInforState extends State<TabInfor> {
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
                             return (index != (3 - 1))
-                                ? NewItem(id: listNew[index].id)
-                                : NewItemEnd(id: listNew[index].id);
+                                ? NewItem(news: listNew[index])
+                                : NewItemEnd(news: listNew[index]);
                           })),
                 ],
               ),

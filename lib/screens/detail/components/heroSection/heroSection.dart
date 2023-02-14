@@ -1,21 +1,17 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:blur/blur.dart';
+import 'package:cornie_app/screens/detail/components/heroSection/ratingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../models/movieModel.dart';
 import '../../../../models/theaterDetail.dart';
+import '../../../../models/userModel.dart';
 
 class HeroSection extends StatefulWidget {
-  HeroSection({super.key, required this.id});
+  HeroSection({super.key, required this.id, required this.userId});
   String id;
+  String userId;
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
@@ -49,11 +45,43 @@ class _HeroSectionState extends State<HeroSection> {
     });
   }
 
+  userModel user = userModel(
+      id: '',
+      email: '',
+      fullName: '',
+      userName: '',
+      phoneNumber: '',
+      avatar: '',
+      favoriteList: [],
+      saveList: [],
+      role: '',
+      gender: '',
+      dob: '');
+  Future getUserDetail() async {
+    FirebaseFirestore.instance
+        .collection("users")
+        .where("id", isEqualTo: widget.userId)
+        .snapshots()
+        .listen((value) {
+      setState(() {
+        user = userModel.fromDocument(value.docs.first.data());
+        if (user.favoriteList.contains(widget.id)) {
+          setState(() {
+            liked = true;
+          });
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
     getMovie();
+    getUserDetail();
     super.initState();
   }
+
+  bool liked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -117,13 +145,43 @@ class _HeroSectionState extends State<HeroSection> {
                             Icons.favorite,
                             size: 15,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (liked == false) {
+                              if (widget.userId != '') {
+                                FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(widget.userId)
+                                    .update({
+                                  'favoriteList':
+                                      FieldValue.arrayUnion([widget.id])
+                                });
+                                setState(() {
+                                  liked = !liked;
+                                });
+                              }
+                            } else {
+                              if (widget.userId != '') {
+                                FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(widget.userId)
+                                    .update({
+                                  'favoriteList':
+                                      FieldValue.arrayRemove([widget.id])
+                                });
+                                setState(() {
+                                  liked = !liked;
+                                });
+                              }
+                            }
+                          },
                           label: Text('Thích'),
                           style: ElevatedButton.styleFrom(
                             // elevation: 18,
                             // shadowColor: Colors.white,
                             primary: AppColors.alt300,
-                            onPrimary: AppColors.white,
+                            onPrimary: liked
+                                ? Color.fromARGB(255, 251, 95, 74)
+                                : AppColors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -135,37 +193,17 @@ class _HeroSectionState extends State<HeroSection> {
                             Icons.star,
                             size: 15,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (widget.userId != '') {
+                              showRatingDialog(context, widget.id,
+                                  widget.userId, user.fullName, movie.name);
+                            }
+                          },
                           label: Text('Đánh giá'),
                           style: ElevatedButton.styleFrom(
                             // elevation: 18,
                             // shadowColor: Colors.white,
                             primary: AppColors.alt300,
-                            onPrimary: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        OutlinedButton(
-                          onPressed: () {},
-                          child: Text('Trailer'),
-                          style: OutlinedButton.styleFrom(
-                            // backgroundColor: Colors.white,// background
-                            primary: AppColors.white, // foreground text
-                            side: BorderSide(
-                                color: AppColors.white), // foreground border
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Mua vé'),
-                          style: ElevatedButton.styleFrom(
-                            // elevation: 18,
-                            // shadowColor: Colors.white,
-                            primary: AppColors.error,
                             onPrimary: AppColors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),

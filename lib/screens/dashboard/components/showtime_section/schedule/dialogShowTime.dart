@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../../models/movieModel.dart';
 import '../../../../booking/seatScreen.dart';
+import '../../../../navigation/navigationBooking.dart';
 
 late DateTime date = DateTime.now();
 int itemChosed = 0;
@@ -139,23 +140,27 @@ showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleListChoice,
                                                   MaterialPageRoute(
                                                       builder: ((context) =>
                                                           DetailMovie(
-                                                              id: moviesList[
-                                                                      index]
-                                                                  .id))));
+                                                            id: moviesList[
+                                                                    index]
+                                                                .id,
+                                                            userId: userId,
+                                                          ))));
                                             },
                                             child: Container(
-                                              width: 100,
+                                              width: 120,
                                               height: 160,
                                               margin: EdgeInsets.only(
                                                   left: 24, bottom: 24),
                                               decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                      moviesList[index].poster,
-                                                    ),
-                                                    fit: BoxFit.cover),
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8)),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8)),
+                                                child: Image.network(
+                                                    moviesList[index].poster,
+                                                    fit: BoxFit.cover),
                                               ),
                                             ),
                                           ),
@@ -267,9 +272,9 @@ showTimeDialog(BuildContext mContext, List<ScheduleModel> scheduleListChoice,
                                                                 MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
-                                                                            SeatScreen(
+                                                                            NavigationBooking(
                                                                               id: scheduleListChoice[index].id,
-                                                                              userId: '',
+                                                                              userId: (userId != '') ? userId : '',
                                                                             )));
                                                           },
                                                           child:

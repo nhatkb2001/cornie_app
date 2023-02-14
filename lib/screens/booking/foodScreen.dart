@@ -20,11 +20,21 @@ class FoodScreen extends StatefulWidget {
   int pricetotal;
   List<List<int>> chairStatus;
   List<SeatModel> seatList;
+  String schedulesId;
+  String userId;
+  String nameMovie;
+  String nametheater;
+  String date;
 
   FoodScreen(
       {super.key,
       required this.pricetotal,
       required this.chairStatus,
+      required this.schedulesId,
+      required this.userId,
+      required this.nameMovie,
+      required this.nametheater,
+      required this.date,
       required this.seatList});
 
   @override
@@ -586,7 +596,7 @@ class _FoodScreenState extends State<FoodScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Xác Ướp: Cuộc Phiêu Lưu Đến London [LT]',
+                                  widget.nameMovie,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontFamily: 'Poppins',
@@ -596,7 +606,7 @@ class _FoodScreenState extends State<FoodScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Rạp: ' + 'Cinestar Quốc Thanh',
+                                  'Rạp: ' + widget.nametheater,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
@@ -606,7 +616,7 @@ class _FoodScreenState extends State<FoodScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Suất 17:55 - Hôm nay, 29/01',
+                                  widget.date,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
@@ -681,6 +691,11 @@ class _FoodScreenState extends State<FoodScreen> {
                                               comboCheckOut: comboCheckOut,
                                               seatList: widget.seatList,
                                               pricetotal: widget.pricetotal,
+                                              scheduleId: widget.schedulesId,
+                                              userId: widget.userId,
+                                              date: widget.date,
+                                              nameMovie: widget.nameMovie,
+                                              nametheater: widget.nametheater,
                                             )));
                               });
                             },

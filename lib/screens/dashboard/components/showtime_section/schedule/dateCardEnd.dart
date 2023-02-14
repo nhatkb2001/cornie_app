@@ -45,15 +45,6 @@ class _ItemDateEndState extends State<ItemDateEnd> {
                     color: (widget.picked == false)
                         ? const Color(0xFF3B3B3B)
                         : AppColors.white)),
-            const SizedBox(height: 8),
-            Text(widget.dayName,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    color: (widget.picked == false)
-                        ? const Color(0xFF3B3B3B)
-                        : AppColors.white)),
           ],
         ),
       ),

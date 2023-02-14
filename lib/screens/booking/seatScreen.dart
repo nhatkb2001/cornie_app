@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/models/seatModel.dart';
+import 'package:cornie_app/models/theaterDetail.dart';
 import 'package:cornie_app/screens/booking/components/buildChair.dart';
 import 'package:cornie_app/screens/booking/foodScreen.dart';
 import 'package:cornie_app/screens/detail/components/heroSection/heroSection.dart';
@@ -11,7 +12,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../models/movieModel.dart';
 import '../../models/scheduleModel.dart';
+import '../../models/theaterModel.dart';
 
 class SeatScreen extends StatefulWidget {
   SeatScreen({super.key, required this.id, required this.userId});
@@ -45,6 +48,7 @@ class _SeatScreenState extends State<SeatScreen> {
       idTheaterDetail: '',
       timeStart: '',
       date: '',
+      idTheater: '',
       price: '',
       map: {});
   Future getSchedule() async {
@@ -56,13 +60,51 @@ class _SeatScreenState extends State<SeatScreen> {
       setState(() {
         schedule = ScheduleModel.fromDocument(value.docs.first.data());
         _chairStatus = (MatrixHelper.intMatrixFromMap(schedule.map));
+        getFilm();
+        getTheater();
       });
     });
   }
 
-  Future updateMatrix() async {
-    FirebaseFirestore.instance.collection("schedules").doc(widget.id).update({
-      "matrix": MatrixHelper.mapFromIntMatrix(_chairStatus),
+  MovieModel movie = MovieModel(
+      id: '',
+      ageLimit: '',
+      name: '',
+      description: '',
+      duration: '',
+      poster: '',
+      image: '',
+      startTime: '',
+      type: '',
+      typeSub: '',
+      actorList: [],
+      director: [],
+      publisher: []);
+  Future getFilm() async {
+    FirebaseFirestore.instance
+        .collection("movies")
+        .where('id', isEqualTo: schedule.idMovie)
+        .snapshots()
+        .listen((value) {
+      setState(() {
+        movie = MovieModel.fromDocument(value.docs.first.data());
+      });
+    });
+  }
+
+  TheaterDetailModel theater = TheaterDetailModel(
+      id: '', name: '', listMovies: [], address: '', city: '');
+  Future getTheater() async {
+    FirebaseFirestore.instance
+        .collection("theaters")
+        .doc(schedule.idTheater)
+        .collection('theatersDetail')
+        .where('id', isEqualTo: schedule.idTheaterDetail)
+        .snapshots()
+        .listen((value) {
+      setState(() {
+        theater = TheaterDetailModel.fromDocument(value.docs.first.data());
+      });
     });
   }
 
@@ -137,7 +179,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         width: 32,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.black,
+                              color: AppColors.grey500,
                             ),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8))),
@@ -145,7 +187,7 @@ class _SeatScreenState extends State<SeatScreen> {
                           child: Icon(
                             Iconsax.shopping_cart,
                             size: 24,
-                            color: AppColors.black,
+                            color: AppColors.grey500,
                           ),
                         ),
                       ),
@@ -154,7 +196,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         child: Icon(
                           Iconsax.arrow_right_2,
                           size: 24,
-                          color: AppColors.black,
+                          color: AppColors.grey500,
                         ),
                       ),
                       SizedBox(width: 16),
@@ -163,7 +205,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         width: 32,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.black,
+                              color: AppColors.grey500,
                             ),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8))),
@@ -171,7 +213,7 @@ class _SeatScreenState extends State<SeatScreen> {
                           child: Icon(
                             Iconsax.card_edit,
                             size: 24,
-                            color: AppColors.black,
+                            color: AppColors.grey500,
                           ),
                         ),
                       ),
@@ -180,7 +222,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         child: Icon(
                           Iconsax.arrow_right_2,
                           size: 24,
-                          color: AppColors.black,
+                          color: AppColors.grey500,
                         ),
                       ),
                       SizedBox(width: 16),
@@ -189,7 +231,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         width: 32,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.black,
+                              color: AppColors.grey500,
                             ),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8))),
@@ -197,7 +239,7 @@ class _SeatScreenState extends State<SeatScreen> {
                           child: Icon(
                             Iconsax.info_circle,
                             size: 24,
-                            color: AppColors.black,
+                            color: AppColors.grey500,
                           ),
                         ),
                       ),
@@ -447,7 +489,7 @@ class _SeatScreenState extends State<SeatScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Xác Ướp: Cuộc Phiêu Lưu Đến London [LT]',
+                                  movie.name,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontFamily: 'Poppins',
@@ -457,7 +499,7 @@ class _SeatScreenState extends State<SeatScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Rạp: ' + 'Cinestar Quốc Thanh',
+                                  'Rạp: ' + theater.name,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
@@ -467,7 +509,10 @@ class _SeatScreenState extends State<SeatScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Suất 17:55 - Hôm nay, 29/01',
+                                  'Suất ' +
+                                      schedule.timeStart +
+                                      " Ngày " +
+                                      schedule.date,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
@@ -514,14 +559,26 @@ class _SeatScreenState extends State<SeatScreen> {
                           SizedBox(height: 24),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FoodScreen(
-                                            pricetotal: price,
-                                            chairStatus: _chairStatus,
-                                            seatList: seatList,
-                                          )));
+                              if (widget.userId == '') {
+                                Scaffold.of(context).openDrawer();
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FoodScreen(
+                                              userId: widget.userId,
+                                              schedulesId: widget.id,
+                                              pricetotal: price,
+                                              chairStatus: _chairStatus,
+                                              seatList: seatList,
+                                              date: 'Suất ' +
+                                                  schedule.timeStart +
+                                                  " Ngày " +
+                                                  schedule.date,
+                                              nameMovie: movie.name,
+                                              nametheater: theater.name,
+                                            )));
+                              }
                             },
                             child: Container(
                               width: 300 + 56,

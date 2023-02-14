@@ -6,41 +6,9 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../models/newModel.dart';
 
-class NewItemEnd extends StatefulWidget {
-  NewItemEnd({super.key, required this.id});
-  String id;
-
-  @override
-  State<NewItemEnd> createState() => _NewItemEndState();
-}
-
-class _NewItemEndState extends State<NewItemEnd> {
-  NewModel news = NewModel(
-      id: '',
-      idOwner: '',
-      timeCreate: '',
-      contents: [],
-      liked: [],
-      title: '',
-      posterNew: '');
-
-  Future getNews() async {
-    FirebaseFirestore.instance
-        .collection("news")
-        .where('id', isEqualTo: widget.id)
-        .snapshots()
-        .listen((value) {
-      setState(() {
-        news = NewModel.fromDocument(value.docs.first.data());
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    getNews();
-    super.initState();
-  }
+class NewItemEnd extends StatelessWidget {
+  NewItemEnd({super.key, required this.news});
+  NewModel news;
 
   @override
   Widget build(BuildContext context) {

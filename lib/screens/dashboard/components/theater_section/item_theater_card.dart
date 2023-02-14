@@ -113,8 +113,8 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                   }
                 },
               );
-              showTimeDialog(
-                  context, scheduleListChoice, moviesList, widget.userId);
+              showTimeDialog(context, scheduleListChoice, moviesList,
+                  (widget.userId != '') ? widget.userId : '');
             });
           });
         });
@@ -185,16 +185,19 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                       return (index == (theaterDetailListFilter.length - 1))
                           ? InkWell(
                               onTap: () {
-                                setState(() {
-                                  if (id == theaterDetailListFilter[index].id) {
-                                    id = '';
-                                  } else {
-                                    id = theaterDetailListFilter[index].id;
-                                    getScheduleList(
-                                        theaterDetailListFilter[index].id,
-                                        context);
-                                  }
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    if (id ==
+                                        theaterDetailListFilter[index].id) {
+                                      id = '';
+                                    } else {
+                                      id = theaterDetailListFilter[index].id;
+                                      getScheduleList(
+                                          theaterDetailListFilter[index].id,
+                                          context);
+                                    }
+                                  });
+                                }
                               },
                               child: item_theater_end(
                                   theater: theaterDetailListFilter[index].name,
@@ -207,16 +210,19 @@ class _ItemTheaterCardState extends State<ItemTheaterCard> {
                             )
                           : InkWell(
                               onTap: () {
-                                setState(() {
-                                  if (id == theaterDetailListFilter[index].id) {
-                                    id = '';
-                                  } else {
-                                    id = theaterDetailListFilter[index].id;
-                                    getScheduleList(
-                                        theaterDetailListFilter[index].id,
-                                        context);
-                                  }
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    if (id ==
+                                        theaterDetailListFilter[index].id) {
+                                      id = '';
+                                    } else {
+                                      id = theaterDetailListFilter[index].id;
+                                      getScheduleList(
+                                          theaterDetailListFilter[index].id,
+                                          context);
+                                    }
+                                  });
+                                }
                               },
                               child: item_theater(
                                   theater: theaterDetailListFilter[index].name,
