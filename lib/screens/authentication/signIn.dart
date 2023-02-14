@@ -21,6 +21,8 @@ class _SignInState extends State<SignIn> {
   TextEditingController passswordRegisterController = TextEditingController();
   bool isLoading = false;
   bool isHiddenPassword = true;
+  String message = '';
+  bool error = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +108,14 @@ class _SignInState extends State<SignIn> {
                     ],
                   ),
                 ),
+                Text(
+                  message,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.error),
+                ),
                 SizedBox(height: 8),
                 Container(
                   alignment: Alignment.center,
@@ -163,7 +173,10 @@ class _SignInState extends State<SignIn> {
                       if (isLoading) return;
                       setState(() {
                         signInController(emailController.text,
-                            passswordController.text, context);
+                                passswordController.text, context)
+                            .catchError((e) {
+                          message = e;
+                        });
                       });
                       await Future.delayed(const Duration(seconds: 3));
                       if (this.mounted) {

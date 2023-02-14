@@ -12,19 +12,20 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../authentication/authentication.dart';
+import '../authentication/tickeList.dart';
 import '../community/community.dart';
 import '../navigation/navi_item_none_arrow.dart';
 import 'navigationCommunity.dart';
 
-class NavigationUser extends StatefulWidget {
+class NavigationTicket extends StatefulWidget {
   String uid;
-  NavigationUser({super.key, required this.uid});
+  NavigationTicket({super.key, required this.uid});
 
   @override
-  State<NavigationUser> createState() => _NavigationUserState(uid);
+  State<NavigationTicket> createState() => _NavigationTicketState(uid);
 }
 
-class _NavigationUserState extends State<NavigationUser> {
+class _NavigationTicketState extends State<NavigationTicket> {
   int valueChoose = 1;
   PageController controller = PageController();
 
@@ -43,7 +44,7 @@ class _NavigationUserState extends State<NavigationUser> {
       gender: '',
       dob: '');
 
-  _NavigationUserState(this.uid);
+  _NavigationTicketState(this.uid);
   Future getUserDetail(String uid) async {
     FirebaseFirestore.instance
         .collection("users")
@@ -206,14 +207,7 @@ class _NavigationUserState extends State<NavigationUser> {
         ),
         body: PageView(
           controller: controller,
-          children: [
-            AtDashboardScreen(
-              userId: uid,
-            ),
-            Community(
-              userId: uid,
-            )
-          ],
+          children: [TicketList(userId: widget.uid)],
         ));
   }
 }
