@@ -1,4 +1,5 @@
 import 'package:cornie_app/screens/booking/seatScreen.dart';
+import 'package:cornie_app/screens/community/community.dart';
 import 'package:cornie_app/screens/dashboard/dashboard.dart';
 import 'package:cornie_app/screens/detail/detailMovie.dart';
 import 'package:cornie_app/screens/navigation/navigation.dart';
@@ -11,14 +12,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
-      apiKey: 'AIzaSyCVIAr1EU9bHrk6zOBGMEA7PE_Qrf6RaeI',
-      appId: '1:602307828276:web:2057b60c9286df83b60861',
-      messagingSenderId: '602307828276',
-      projectId: 'cornieproject',
-      authDomain: 'cornieproject.firebaseapp.com',
-      storageBucket: 'cornieproject.appspot.com',
-      measurementId: 'G-WS3G48K1YP',
-    ),
+        apiKey: "AIzaSyCVIAr1EU9bHrk6zOBGMEA7PE_Qrf6RaeI",
+        authDomain: "cornieproject.firebaseapp.com",
+        databaseURL: "https://cornieproject-default-rtdb.firebaseio.com",
+        projectId: "cornieproject",
+        storageBucket: "cornieproject.appspot.com",
+        messagingSenderId: "602307828276",
+        appId: "1:602307828276:web:2057b60c9286df83b60861",
+        measurementId: "G-WS3G48K1YP"),
   );
 
   runApp(MyApp());

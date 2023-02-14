@@ -5,8 +5,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
 class TabInfo extends StatelessWidget {
-  TabInfo({super.key, required this.id});
+  TabInfo({super.key, required this.id, required this.userId});
   String id;
+  String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,10 @@ class TabInfo extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              TabInfor(),
+              TabInfor(
+                id: id,
+                userId: userId,
+              ),
               Icon(Icons.directions_transit),
               Icon(Icons.directions_bike),
               Icon(Icons.directions_bike),

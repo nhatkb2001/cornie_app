@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/constants/images.dart';
 import 'package:cornie_app/models/userModel.dart';
+import 'package:cornie_app/screens/booking/seatScreen.dart';
 import 'package:cornie_app/screens/dashboard/components/address_section/address_list.dart';
 import 'package:cornie_app/screens/dashboard/dashboard.dart';
 import 'package:cornie_app/screens/navigation/avatar_item.dart';
 import 'package:cornie_app/screens/navigation/navi_item.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cornie_app/screens/navigation/navigation.dart';
+import 'package:cornie_app/screens/navigation/navigation_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -14,22 +16,21 @@ import 'package:iconsax/iconsax.dart';
 import '../authentication/authentication.dart';
 import '../community/community.dart';
 import '../navigation/navi_item_none_arrow.dart';
-import 'navigationCommunity.dart';
 
-class NavigationUser extends StatefulWidget {
-  String uid;
-  NavigationUser({super.key, required this.uid});
+class NavigationBooking extends StatefulWidget {
+  String id;
+  String userId;
+  NavigationBooking({super.key, required this.id, required this.userId});
 
   @override
-  State<NavigationUser> createState() => _NavigationUserState(uid);
+  State<NavigationBooking> createState() => _NavigationBookingState();
 }
 
-class _NavigationUserState extends State<NavigationUser> {
+class _NavigationBookingState extends State<NavigationBooking> {
   int valueChoose = 1;
   PageController controller = PageController();
 
   TextEditingController searchController = TextEditingController();
-  String uid = '';
   userModel user = userModel(
       id: '',
       email: '',
@@ -43,39 +44,61 @@ class _NavigationUserState extends State<NavigationUser> {
       gender: '',
       dob: '');
 
-  _NavigationUserState(this.uid);
   Future getUserDetail(String uid) async {
-    FirebaseFirestore.instance
-        .collection("users")
-        .where("id", isEqualTo: uid)
-        .snapshots()
-        .listen((value) {
-      setState(() {
-        user = userModel.fromDocument(value.docs.first.data());
+    if (uid != '') {
+      FirebaseFirestore.instance
+          .collection("users")
+          .where("id", isEqualTo: uid)
+          .snapshots()
+          .listen((value) {
+        setState(() {
+          user = userModel.fromDocument(value.docs.first.data());
+        });
       });
-    });
+    }
   }
 
   @override
   void initState() {
+    getUserDetail(widget.userId);
     super.initState();
-    User? user = FirebaseAuth.instance.currentUser;
-    final userid = user?.uid.toString();
-    uid = userid!;
-    getUserDetail(uid);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: Authentication(),
         appBar: AppBar(
+          leading: widget.userId == ''
+              ? Builder(
+                  builder: (context) => GestureDetector(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(left: 24),
+                        child: const Icon(
+                          Iconsax.user_octagon,
+                          size: 28,
+                          color: AppColors.grey900,
+                        )),
+                  ),
+                )
+              : Container(),
           backgroundColor: AppColors.white,
           actions: <Widget>[
             GestureDetector(
               onTap: () {
                 setState(() {
-                  controller.jumpToPage(0);
-                  print('okey');
+                  widget.userId == ''
+                      ? Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Navigation()))
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NavigationUser(
+                                    uid: widget.userId,
+                                  )));
                 });
               },
               child: Container(
@@ -102,12 +125,16 @@ class _NavigationUserState extends State<NavigationUser> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NavigationCommunity(
-                              userId: user.id,
-                            )));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => Community(
+                //               userId: '',
+                //             )));
+                setState(() {
+                  controller.jumpToPage(1);
+                  print('okey');
+                });
               },
               child: Container(
                 margin: EdgeInsets.only(right: 300),
@@ -172,46 +199,36 @@ class _NavigationUserState extends State<NavigationUser> {
                     color: AppColors.grey900,
                   )),
             ),
-            GestureDetector(
-              onTap: () {
-                showProfileDialog(context);
-              },
-              child: Container(
-                  margin: const EdgeInsets.only(right: 24),
-                  width: 30,
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Image.network(
-                      (user.avatar != '')
-                          ? user.avatar
-                          : 'https://i.imgur.com/RUgPziD.jpg',
-                      fit: BoxFit.cover,
-                      width: 30,
-                      height: 24,
-                    ),
-                  )),
-            ),
-            // Container(
-            //     height: 24,
-            //     width: 24,
-            //     decoration: BoxDecoration(
-            //         border: Border.all(
-            //           color: AppColors.black,
-            //           width: 1,
-            //         ),
-            //         borderRadius: BorderRadius.all(Radius.circular(4))),
-            //     child: )
+            widget.userId != ''
+                ? GestureDetector(
+                    onTap: () {
+                      showProfileDialog(context);
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(right: 24),
+                        width: 30,
+                        padding: EdgeInsets.only(top: 14, bottom: 14),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            (user.avatar != '')
+                                ? user.avatar
+                                : 'https://i.imgur.com/RUgPziD.jpg',
+                            fit: BoxFit.cover,
+                            width: 30,
+                            height: 24,
+                          ),
+                        )),
+                  )
+                : Container()
           ],
         ),
         body: PageView(
           controller: controller,
           children: [
-            AtDashboardScreen(
-              userId: uid,
-            ),
-            Community(
-              userId: uid,
+            SeatScreen(
+              id: widget.id,
+              userId: widget.userId,
             )
           ],
         ));

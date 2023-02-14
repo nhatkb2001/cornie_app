@@ -56,26 +56,6 @@ class _ItemTheaterCardTabInforState extends State<ItemTheaterCardTabInfor> {
     });
   }
 
-  late DateTime date = DateTime.now();
-
-  String currentTime = DateFormat('dd/MM').format(DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
-  List dateList = [
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day)),
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day + 1)),
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day + 2)),
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day + 3)),
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day + 4)),
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day + 5)),
-    DateFormat('dd/MM').format(DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day + 6)),
-  ];
   String id = '';
   List<MovieModel> moviesList = [];
   List<ScheduleModel> scheduleList = [];
@@ -89,21 +69,6 @@ class _ItemTheaterCardTabInforState extends State<ItemTheaterCardTabInfor> {
         scheduleList.clear();
         value.docs.forEach((element) {
           scheduleList.add(ScheduleModel.fromDocument(element.data()));
-        });
-        scheduleList.forEach((value3) {
-          FirebaseFirestore.instance
-              .collection("movies")
-              .snapshots()
-              .listen((value2) {
-            setState(() {
-              moviesList.clear();
-              value2.docs.forEach((element2) {
-                if (element2.id == value3.idMovie) {
-                  moviesList.add(MovieModel.fromDocument(element2.data()));
-                }
-              });
-            });
-          });
         });
       });
     });
@@ -210,13 +175,15 @@ class _ItemTheaterCardTabInforState extends State<ItemTheaterCardTabInfor> {
                                 });
                               },
                               child: item_theater_Tab_Infor(
-                                  theater: theaterDetailListFilter[index].name,
-                                  description:
-                                      theaterDetailListFilter[index].address,
-                                  picked:
-                                      (id == theaterDetailListFilter[index].id)
-                                          ? true
-                                          : false),
+                                theater: theaterDetailListFilter[index].name,
+                                description:
+                                    theaterDetailListFilter[index].address,
+                                picked:
+                                    (id == theaterDetailListFilter[index].id)
+                                        ? true
+                                        : false,
+                                scheduleList: scheduleList,
+                              ),
                             );
                     }),
               ),

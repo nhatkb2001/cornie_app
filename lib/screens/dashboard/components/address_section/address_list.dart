@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/constants/images.dart';
@@ -17,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../models/newModel.dart';
+import '../../../new/newCreate.dart';
 import '../showtime_section/showtime.dart';
 
 class AddressList extends StatefulWidget {
@@ -80,24 +83,49 @@ class _AddressListState extends State<AddressList> {
   }
 
   String id = '';
-  List<NewModel> listNew = [];
+
+  List<NewModel> listNew = [
+    // NewModel(
+    //     id: '',
+    //     idOwner: '',
+    //     timeCreate: '',
+    //     contents: [],
+    //     liked: [],
+    //     posterNew: '',
+    //     title: '')
+  ];
 
   Future getNews() async {
     FirebaseFirestore.instance.collection("news").snapshots().listen((value) {
       setState(() {
         listNew.clear();
-        for (var element in value.docs) {
+        // for (var element in value.docs) {
+        //   listNew.add(NewModel.fromDocument(element.data()));
+        // }
+        value.docs.forEach((element) {
           listNew.add(NewModel.fromDocument(element.data()));
-        }
+        });
       });
     });
   }
 
+  StreamController<QuerySnapshot> _localStreamController =
+      StreamController.broadcast();
   @override
   void initState() {
     super.initState();
     getTheaterList();
     getNews();
+    _localStreamController.stream.listen((event) => print(event));
+    FirebaseFirestore.instance.collection("news").snapshots().listen(
+        (QuerySnapshot querySnapshot) =>
+            _localStreamController.add(querySnapshot));
+  }
+
+  @override
+  void dispose() {
+    _localStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -218,15 +246,17 @@ class _AddressListState extends State<AddressList> {
                       return (index == (addressMid.length - 1))
                           ? InkWell(
                               onTap: () {
-                                setState(() {
-                                  if (city == addressMid[index]) {
-                                    city = '';
-                                    theaterList.clear();
-                                  } else {
-                                    city = addressMid[index];
-                                    getTheaterList();
-                                  }
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    if (city == addressMid[index]) {
+                                      city = '';
+                                      theaterList.clear();
+                                    } else {
+                                      city = addressMid[index];
+                                      getTheaterList();
+                                    }
+                                  });
+                                }
                               },
                               child: item_address_end(
                                   address: addressMid[index],
@@ -237,15 +267,17 @@ class _AddressListState extends State<AddressList> {
                             )
                           : InkWell(
                               onTap: () {
-                                setState(() {
-                                  if (city == addressMid[index]) {
-                                    city = '';
-                                    theaterList.clear();
-                                  } else {
-                                    city = addressMid[index];
-                                    getTheaterList();
-                                  }
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    if (city == addressMid[index]) {
+                                      city = '';
+                                      theaterList.clear();
+                                    } else {
+                                      city = addressMid[index];
+                                      getTheaterList();
+                                    }
+                                  });
+                                }
                               },
                               child: item_address(
                                   address: addressMid[index],
@@ -337,90 +369,125 @@ class _AddressListState extends State<AddressList> {
                   ],
                 ),
           const SizedBox(width: 24),
-          (listNew.length != 0)
-              ? Column(
+          Column(
+            children: [
+              const SizedBox(height: 50),
+              Container(
+                height: 52,
+                width: 800,
+                decoration: const BoxDecoration(
+                    color: AppColors.alt100,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8))),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 50),
                     Container(
-                      height: 52,
-                      width: 800,
-                      decoration: const BoxDecoration(
-                          color: AppColors.alt100,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8))),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                                left: 16, top: 16, bottom: 16),
-                            child: const Text(
-                              'Hot News',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.grey900),
-                            ),
-                          ),
-                          Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              //Create news
-                            },
-                            child: Container(
-                                margin: const EdgeInsets.only(right: 24),
-                                child: const Icon(
-                                  Iconsax.add_square,
-                                  size: 28,
-                                  color: AppColors.grey900,
-                                )),
-                          ),
-                        ],
+                      margin:
+                          const EdgeInsets.only(left: 16, top: 16, bottom: 16),
+                      child: const Text(
+                        'Hot News',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.grey900),
                       ),
                     ),
-                    SizedBox(
-                        width: 800,
-                        child: ListView.builder(
-                            itemCount: listNew.length,
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              return ((index != (listNew.length - 1))
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => NewDetail(
-                                                      id: listNew[index].id,
-                                                    )));
-                                      },
-                                      child: NewItem(
-                                        id: listNew[index].id,
-                                      ))
-                                  : GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => NewDetail(
-                                                    id: listNew[index].id)));
-                                      },
-                                      child: NewItemEnd(
-                                        id: listNew[index].id,
-                                      )));
-                            }))
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => NewCreateSceen(
+                                      id: widget.userId,
+                                    ))));
+                      },
+                      child: widget.userId == ''
+                          ? Container()
+                          : Container(
+                              margin: const EdgeInsets.only(right: 24),
+                              child: const Icon(
+                                Iconsax.add_square,
+                                size: 28,
+                                color: AppColors.grey900,
+                              )),
+                    ),
                   ],
-                )
-              : CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.white,
-                )
+                ),
+              ),
+              NewWidget(
+                  localStreamController: _localStreamController,
+                  listNew: listNew)
+            ],
+          )
         ],
       ),
     );
+  }
+}
+
+class NewWidget extends StatelessWidget {
+  const NewWidget({
+    super.key,
+    required StreamController<QuerySnapshot<Object?>> localStreamController,
+    required this.listNew,
+  }) : _localStreamController = localStreamController;
+
+  final StreamController<QuerySnapshot<Object?>> _localStreamController;
+  final List<NewModel> listNew;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: _localStreamController.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SizedBox(
+                width: 800,
+                child: ListView.builder(
+                    itemCount: listNew.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ((index != (listNew.length - 1))
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NewDetail(
+                                              id: listNew[index].id,
+                                            )));
+                              },
+                              child: (listNew[index].id != '')
+                                  ? NewItem(
+                                      news: listNew[index],
+                                    )
+                                  : Container())
+                          : GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            NewDetail(id: listNew[index].id)));
+                              },
+                              child: (listNew[index].id != '')
+                                  ? NewItemEnd(
+                                      news: listNew[index],
+                                    )
+                                  : Container()));
+                      // child:  NewItemEnd(
+                      //         id: listNew[index].id,
+                      //       )));
+                    }));
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 }

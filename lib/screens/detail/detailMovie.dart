@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import 'components/tabInfoSection/tabInfor.dart';
+
 class DetailMovie extends StatefulWidget {
-  DetailMovie({super.key, required this.id});
+  DetailMovie({super.key, required this.id, required this.userId});
   late String id;
+  String userId;
   @override
   State<DetailMovie> createState() => _DetailMovieState();
 }
@@ -25,7 +28,16 @@ class _DetailMovieState extends State<DetailMovie> {
             alignment: Alignment.center,
             margin: EdgeInsets.only(bottom: 50),
             child: Column(
-              children: [HeroSection(id: widget.id), TabInfo(id: widget.id)],
+              children: [
+                HeroSection(
+                  id: widget.id,
+                  userId: widget.userId,
+                ),
+                TabInfor(
+                  id: widget.id,
+                  userId: widget.userId,
+                ),
+              ],
             ),
           ),
         ),

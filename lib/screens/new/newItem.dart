@@ -5,41 +5,9 @@ import 'package:cornie_app/models/newModel.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-class NewItem extends StatefulWidget {
-  NewItem({super.key, required this.id});
-  String id;
-
-  @override
-  State<NewItem> createState() => _NewItemState();
-}
-
-class _NewItemState extends State<NewItem> {
-  NewModel news = NewModel(
-      id: '',
-      idOwner: '',
-      timeCreate: '',
-      contents: [],
-      liked: [],
-      title: '',
-      posterNew: '');
-
-  Future getNews() async {
-    FirebaseFirestore.instance
-        .collection("news")
-        .where('id', isEqualTo: widget.id)
-        .snapshots()
-        .listen((value) {
-      setState(() {
-        news = NewModel.fromDocument(value.docs.first.data());
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    getNews();
-    super.initState();
-  }
+class NewItem extends StatelessWidget {
+  NewItem({super.key, required this.news});
+  NewModel news;
 
   @override
   Widget build(BuildContext context) {

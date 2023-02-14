@@ -50,16 +50,9 @@ class _NavigationNoneBodyState extends State<NavigationNoneBody> {
         ),
         Container(
           margin: EdgeInsets.only(right: 16),
-          child: NaviItem(
-            items: ['Đặt vé', 'Mua vé online'],
-            title: 'Rạp',
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(right: 16),
-          child: NaviItem(
-            items: ['Tin Điện Ảnh', 'Video'],
+          child: NaviItemNoneArrow(
             title: 'Tin tức',
+            items: [],
           ),
         ),
         Container(

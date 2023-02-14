@@ -3,11 +3,13 @@ import 'package:cornie_app/constants/images.dart';
 import 'package:cornie_app/screens/dashboard/components/address_section/address_list.dart';
 import 'package:cornie_app/screens/dashboard/dashboard.dart';
 import 'package:cornie_app/screens/navigation/navi_item.dart';
+import 'package:cornie_app/screens/navigation/navigationCommunity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../authentication/authentication.dart';
+import '../community/community.dart';
 import '../navigation/navi_item_none_arrow.dart';
 
 class Navigation extends StatefulWidget {
@@ -47,8 +49,8 @@ class _NavigationState extends State<Navigation> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  controller.jumpToPage(0);
-                  print('okey');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Navigation()));
                 });
               },
               child: Container(
@@ -68,30 +70,26 @@ class _NavigationState extends State<Navigation> {
             ),
             Container(
               margin: EdgeInsets.only(right: 16),
-              child: NaviItem(
-                items: ['Đặt vé', 'Mua vé online'],
-                title: 'Rạp',
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(right: 16),
-              child: NaviItem(
+              child: NaviItemNoneArrow(
                 items: ['Tin Điện Ảnh', 'Video'],
                 title: 'Tin tức',
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(right: 16),
-              child: NaviItemNoneArrow(
-                items: ['Tin Điện Ảnh', 'Video'],
-                title: 'Đánh giá',
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(right: 300),
-              child: NaviItemNoneArrow(
-                items: ['Tin Điện Ảnh', 'Video'],
-                title: 'Cộng đồng',
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NavigationCommunity(
+                              userId: '',
+                            )));
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 300),
+                child: NaviItemNoneArrow(
+                  items: ['Tin Điện Ảnh', 'Video'],
+                  title: 'Cộng đồng',
+                ),
               ),
             ),
             Container(
@@ -156,7 +154,16 @@ class _NavigationState extends State<Navigation> {
           children: [
             AtDashboardScreen(
               userId: '',
-            )
+            ),
+            Community(
+              userId: '',
+            ),
+            Community(
+              userId: '',
+            ),
+            Community(
+              userId: '',
+            ),
           ],
         ));
   }

@@ -119,6 +119,6 @@ Future signInController(String email, String password, context) async {
 signOut(context) async {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => Navigation()));
+      context, MaterialPageRoute(builder: ((context) => Navigation())));
   await _firebaseAuth.signOut();
 }
