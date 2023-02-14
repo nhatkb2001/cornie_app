@@ -202,7 +202,7 @@ class _NavigationBookingState extends State<NavigationBooking> {
             widget.userId != ''
                 ? GestureDetector(
                     onTap: () {
-                      showProfileDialog(context);
+                      showProfileDialog(context, widget.userId);
                     },
                     child: Container(
                         margin: const EdgeInsets.only(right: 24),

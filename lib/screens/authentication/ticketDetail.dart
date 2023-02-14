@@ -9,17 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
-class InformationTicket extends StatefulWidget {
+class TicketDetail extends StatefulWidget {
   String ticketId;
   String userId;
 
-  InformationTicket({super.key, required this.ticketId, required this.userId});
+  TicketDetail({super.key, required this.ticketId, required this.userId});
 
   @override
-  State<InformationTicket> createState() => _InformationTicketState();
+  State<TicketDetail> createState() => _TicketDetailState();
 }
 
-class _InformationTicketState extends State<InformationTicket> {
+class _TicketDetailState extends State<TicketDetail> {
   String valueChoose = '';
 
   TicketModel ticket = TicketModel(
@@ -94,176 +94,33 @@ class _InformationTicketState extends State<InformationTicket> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 48,
-                  color: AppColors.white,
-                  padding: EdgeInsets.only(left: 300, right: 300),
+                  margin: EdgeInsets.only(left: 250, top: 60),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop()
-                            ..pop();
+                          Navigator.pop(context);
                         },
                         child: Container(
-                          height: 32,
-                          width: 32,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.grey700,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8))),
-                          child: const Center(
-                            child: Icon(
-                              Iconsax.category,
-                              size: 24,
-                              color: AppColors.grey700,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      const Center(
-                        child: Icon(
-                          Iconsax.arrow_right_2,
-                          size: 24,
-                          color: AppColors.black,
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)..pop();
-                        },
-                        child: Container(
-                          height: 32,
-                          width: 32,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.black,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8))),
-                          child: const Center(
-                            child: Icon(
-                              Iconsax.shopping_cart,
-                              size: 24,
-                              color: AppColors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      const Center(
-                        child: Icon(
-                          Iconsax.arrow_right_2,
-                          size: 24,
-                          color: AppColors.grey700,
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop();
-                        },
-                        child: Container(
-                          height: 32,
-                          width: 32,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.black,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8))),
-                          child: const Center(
-                            child: Icon(
-                              Iconsax.card_edit,
-                              size: 24,
-                              color: AppColors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      const Center(
-                        child: Icon(
-                          Iconsax.arrow_right_2,
-                          size: 24,
-                          color: AppColors.grey700,
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: AppColors.error,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8))),
-                        child: const Center(
+                          height: 24,
+                          width: 24,
                           child: Icon(
-                            Iconsax.info_circle,
+                            Iconsax.arrow_left,
                             size: 24,
-                            color: AppColors.error,
+                            color: AppColors.black,
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
-                SizedBox(height: 60),
                 Container(
-                  padding: EdgeInsets.only(left: 250),
+                  padding: EdgeInsets.only(left: 250, top: 30),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
                         children: [
-                          Container(
-                            width: 800,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6)),
-                              color: AppColors.grey200,
-                            ),
-                            padding: EdgeInsets.only(
-                              top: 14,
-                              bottom: 14,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 700,
-                                      padding:
-                                          EdgeInsets.only(left: 16, right: 16),
-                                      child: Text(
-                                        "Bạn không cần tài khoản để mua vé phim. Tuy nhiên, đăng nhập vào tài khoản sẽ giúp bạn lưu lại lịch sử mua vé, cũng như hưởng các ưu đãi chỉ có tại cornin.com.",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 16),
                           Container(
                             width: 800,
                             decoration: BoxDecoration(
@@ -519,35 +376,6 @@ class _InformationTicketState extends State<InformationTicket> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 24),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          NavigationUser(uid: widget.userId)));
-                            },
-                            child: Container(
-                              width: 300 + 56,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
-                                color: AppColors.grey900,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Hoàn thành",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ],

@@ -2,7 +2,9 @@ import 'package:cornie_app/constants/colors.dart';
 import 'package:cornie_app/controller/authenController.dart';
 import 'package:flutter/material.dart';
 
-showProfileDialog(BuildContext mContext) {
+import 'navigation_ticketList.dart';
+
+showProfileDialog(BuildContext mContext, String userId) {
   return showDialog(
       context: mContext,
       builder: (context) {
@@ -72,7 +74,14 @@ showProfileDialog(BuildContext mContext) {
                         ),
                         child: ElevatedButton(
                           //action navigate to dashboard screen
-                          onPressed: () async {},
+                          onPressed: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NavigationTicket(
+                                          uid: userId,
+                                        )));
+                          },
                           style: ElevatedButton.styleFrom(
                               primary: AppColors.grey900,
                               onPrimary: Colors.white,
